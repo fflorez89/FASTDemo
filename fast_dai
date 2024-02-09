@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMX - FAST POC</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(120deg, #000033 0%, #000044 30%, #000055 50%, #000044 70%, #000033 100%);
+      color: white;
+      padding: 50px 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 50px;
+      font-size: 2.5em;
+      font-weight: lighter;
+    }
+
+    .video-container {
+      width: 50%;
+      float: left;
+      box-sizing: border-box;
+      padding: 20px;
+    }
+
+    video {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .video-title {
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: lighter;
+    }
+
+    .br-logo {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      width: 150px;
+    }
+
+    .image-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .image-container img {
+      width: 150px;
+    }
+            .logo-container {
+      position: fixed;
+      left: 20px;
+      top: 20px;
+      width: 150px; /* Adjust size as needed */
+    }
+
+    .logo-container img {
+      width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>AMX - FAST POC</h1>
+  <div class="logo-container">
+    <img src="claro.png" alt="Claro Logo">
+  </div>
+  <div class="video-container">
+    <div class="video-title">FAST Channel</div>
+    <video controls muted id="ClaroBR1" preload="auto">
+      <source src="https://origin-vos360-latam-01.vos360.video/Content/HLS_HLS/Live/channel(claro)/variant.m3u8" type="application/x-mpegURL">
+      Your browser does not support the video tag.
+    </video>
+            <div class="image-container">
+      <img src="Original.png" alt="Ladder1 Image">
+    </div>
+  </div>
+
+  <div class="video-container">
+    <div class="video-title">FAST Channel with Targeted Ads</div>
+    <video controls muted id="ClaroBR2" preload="auto">
+      <source src="https://manifest-irp-vos360-latam-01.vos360.video/variant/v1/ClaroBR/HLS_HLS/Live/channel(claro)/variant.m3u8" type="application/x-mpegURL">
+      Your browser does not support the video tag.
+    </video>
+                <div class="image-container">
+      <img src="AdInsertion.png" alt="Ladder1 Image">
+    </div>
+  </div>
+
+  <img src="https://www.harmonicinc.com/hubfs/video-streaming/vos-ad-harmonic.png" alt="Harmonic Logo" class="br-logo">
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
+  <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const ClaroBR1 = document.getElementById("ClaroBR1");
+    const ClaroBR2 = document.getElementById("ClaroBR2");
+
+    function isSafari() {
+        return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    }
+
+    if (Hls.isSupported() && !isSafari()) {
+        var hls1 = new Hls();
+        var hls2 = new Hls();
+        
+        hls1.loadSource(ClaroBR1.children[0].src);
+        hls1.attachMedia(ClaroBR1);
+        hls1.on(Hls.Events.MANIFEST_PARSED, function() {
+            ClaroBR1.play();
+        });
+
+        hls2.loadSource(ClaroBR2.children[0].src);
+        hls2.attachMedia(ClaroBR2);
+        hls2.on(Hls.Events.MANIFEST_PARSED, function() {
+            ClaroBR2.play();
+        });
+    } else if (ClaroBR1.canPlayType('application/vnd.apple.mpegurl') || isSafari()) {
+        ClaroBR1.addEventListener('canplay', function() {
+            ClaroBR1.play();
+        });
+        ClaroBR2.addEventListener('canplay', function() {
+            ClaroBR2.play();
+        });
+    }
+});
+  </script>
+</body>
+</html>
