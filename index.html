@@ -77,7 +77,7 @@
   <div class="video-container">
     <div class="video-title">FAST Channel</div>
     <video controls muted id="ClaroBR1" preload="auto">
-      <source src="https://origin-vos360-latam-01.vos360.video/Content/HLS_HLS/Live/channel(ClaroBR)/variant.m3u8?debug=true&sessid=clarobr001">
+      <source src="https://origin-vos360-latam-01.vos360.video/Content/HLS_HLS/Live/channel(ClaroBR)/variant.m3u8?debug=true">
       Your browser does not support the video tag.
     </video>
             <div class="image-container">
@@ -88,7 +88,7 @@
   <div class="video-container">
     <div class="video-title">FAST Channel with Targeted Ads</div>
     <video controls muted id="ClaroBR2" preload="auto">
-      <source src="https://manifest-vos360-latam-01.vos360.video/variant/v1/ClaroBR/HLS_HLS/Live/channel(ClaroBR)/variant.m3u8?debug=true&sessid=clarobr001">
+      <source src="https://manifest-vos360-latam-01.vos360.video/variant/v1/ClaroBR/HLS_HLS/Live/channel(ClaroBR)/variant.m3u8?debug=true">
       Your browser does not support the video tag.
     </video>
                 <div class="image-container">
@@ -99,15 +99,31 @@
   <img src="https://www.harmonicinc.com/hubfs/video-streaming/vos-ad-harmonic.png" alt="Harmonic Logo" class="br-logo">
 
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
-  <script>
+<script>
 document.addEventListener("DOMContentLoaded", function() {
     const ClaroBR1 = document.getElementById("ClaroBR1");
     const ClaroBR2 = document.getElementById("ClaroBR2");
     let videosReadyToPlay = 0;
 
+    // Función para generar un valor aleatorio para sessid
+    function generateRandomSessionId(length) {
+        const possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let randomId = '';
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * possibleChars.length);
+            randomId += possibleChars[randomIndex];
+        }
+        return randomId;
+    }
+
+    // Añadir sessid aleatorio a la URL del video ClaroBR2
+    const randomSessionId = generateRandomSessionId(10); // Genera un ID de sesión de longitud 10
+    const claroBR2SourceElement = ClaroBR2.getElementsByTagName('source')[0];
+    claroBR2SourceElement.src += `&sessid=${randomSessionId}`;
+
     function tryPlayVideos() {
         videosReadyToPlay++;
-        if (videosReadyToPlay === 2) { // Check if both videos are ready
+        if (videosReadyToPlay === 2) { // Verificar si ambos videos están listos
             ClaroBR1.play();
             ClaroBR2.play();
         }
@@ -125,7 +141,8 @@ document.addEventListener("DOMContentLoaded", function() {
         hls1.attachMedia(ClaroBR1);
         hls1.on(Hls.Events.MANIFEST_PARSED, tryPlayVideos);
 
-        hls2.loadSource(ClaroBR2.children[0].src);
+        // Utilizar la nueva URL con sessid aleatorio para cargar el video ClaroBR2
+        hls2.loadSource(claroBR2SourceElement.src);
         hls2.attachMedia(ClaroBR2);
         hls2.on(Hls.Events.MANIFEST_PARSED, tryPlayVideos);
     } else if (ClaroBR1.canPlayType('application/vnd.apple.mpegurl') || isSafari()) {
@@ -133,6 +150,6 @@ document.addEventListener("DOMContentLoaded", function() {
         ClaroBR2.addEventListener('loadedmetadata', tryPlayVideos);
     }
 });
-  </script>
+</script>
 </body>
 </html>
